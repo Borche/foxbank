@@ -19,18 +19,19 @@ public class FoxBankSecurityConfig {
 
   @Bean
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeHttpRequests()
+    http.csrf().disable()
+            .authorizeHttpRequests()
             .requestMatchers("/myAccount", "/myBalance", "/myLoans", "/myCards").authenticated()
-            .requestMatchers("/contact", "/notices").permitAll()
+            .requestMatchers("/contact", "/notices", "/register").permitAll()
             .and().formLogin()
             .and().httpBasic();
     return http.build();
   }
 
-  @Bean
+  /*@Bean
   public UserDetailsService userDetailsService(DataSource dataSource) {
     return new JdbcUserDetailsManager(dataSource);
-  }
+  }*/
 
   /*@Bean
   public InMemoryUserDetailsManager userDetailsManager() {
