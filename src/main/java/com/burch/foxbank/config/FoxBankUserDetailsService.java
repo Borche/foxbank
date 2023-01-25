@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class FoxBankUserDetails implements UserDetailsService {
+public class FoxBankUserDetailsService implements UserDetailsService {
 
   @Autowired
   CustomerRepository customerRepository;
