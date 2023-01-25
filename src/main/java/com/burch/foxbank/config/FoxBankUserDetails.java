@@ -26,7 +26,10 @@ public class FoxBankUserDetails implements UserDetailsService {
     List<Customer> customers = customerRepository.findByEmail(username);
     if (customers.size() == 0) {
       throw new UsernameNotFoundException("User not found: " + username);
+    } else if (customers.size() >= 2) {
+      throw new IllegalStateException("Multiple users found in database: " + username);
     } else {
+      // All good
       userName = customers.get(0).getEmail();
       password = customers.get(0).getPwd();
       authorities = new ArrayList<>();
