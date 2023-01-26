@@ -11,6 +11,7 @@ and model is in the same package or a subpackage in this package. */
 // @EnableJpaRepositories("com.burch.foxbank.repository")
 // @EntityScan("com.burch.foxbank.model")
 @SpringBootApplication
+@EnableWebSecurity(debug = true)
 public class FoxbankApplication {
 
   public static void main(String[] args) {

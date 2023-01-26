@@ -1,6 +1,9 @@
 package com.burch.foxbank.config;
 
+import com.burch.foxbank.filter.AuthoritiesLoggingAfterFilter;
+import com.burch.foxbank.filter.AuthoritiesLoggingAtFilter;
 import com.burch.foxbank.filter.CsrfCookieFilter;
+import com.burch.foxbank.filter.RequestValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -57,12 +60,11 @@ public class FoxBankSecurityConfig {
             .ignoringRequestMatchers("/register")
             .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         )
+        .addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class)
+        .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
+        .addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)
         .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
         .authorizeHttpRequests()
-          /*.requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
-          .requestMatchers("/myBalance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
-          .requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
-          .requestMatchers("/myCards").hasAuthority("VIEWCARDSX")*/
           .requestMatchers("/myAccount").hasRole("MANAGER")
           .requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN")
           .requestMatchers("/myLoans").hasRole("USER")
