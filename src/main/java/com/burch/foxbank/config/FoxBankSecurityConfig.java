@@ -59,8 +59,16 @@ public class FoxBankSecurityConfig {
         )
         .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
         .authorizeHttpRequests()
-          .requestMatchers("/myAccount", "/myBalance", "/myLoans", "/myCards", "/user", "/contact").authenticated()
-          .requestMatchers("/notices", "/register").permitAll()
+          /*.requestMatchers("/myAccount").hasAuthority("VIEWACCOUNT")
+          .requestMatchers("/myBalance").hasAnyAuthority("VIEWACCOUNT", "VIEWBALANCE")
+          .requestMatchers("/myLoans").hasAuthority("VIEWLOANS")
+          .requestMatchers("/myCards").hasAuthority("VIEWCARDSX")*/
+          .requestMatchers("/myAccount").hasRole("MANAGER")
+          .requestMatchers("/myBalance").hasAnyRole("USER", "ADMIN")
+          .requestMatchers("/myLoans").hasRole("USER")
+          .requestMatchers("/myCards").hasRole("USER")
+          .requestMatchers("/user").authenticated()
+          .requestMatchers("/notices", "/contact", "/register").permitAll()
       .and().formLogin()
       .and().httpBasic();
     return http.build();
