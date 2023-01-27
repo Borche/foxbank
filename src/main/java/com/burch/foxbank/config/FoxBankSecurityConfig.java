@@ -3,6 +3,8 @@ package com.burch.foxbank.config;
 import com.burch.foxbank.filter.AuthoritiesLoggingAfterFilter;
 import com.burch.foxbank.filter.AuthoritiesLoggingAtFilter;
 import com.burch.foxbank.filter.CsrfCookieFilter;
+import com.burch.foxbank.filter.JWTTokenGeneratorFilter;
+import com.burch.foxbank.filter.JWTTokenValidatorFilter;
 import com.burch.foxbank.filter.RequestValidationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,16 +35,17 @@ public class FoxBankSecurityConfig {
    *  2) The Session & JSessionID will not be created by default. Inorder to create a session after intial login, we need to configure
    *      sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS)) like shown below.
    */
-    http
+    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+      .and()
         .securityContext().requireExplicitSave(false)
       .and()
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
         .cors().configurationSource(request -> {
             CorsConfiguration config = new CorsConfiguration();
             config.setAllowedOrigins(List.of("http://localhost:4200"));
             config.setAllowedMethods(List.of("*"));
             config.setAllowCredentials(true);
             config.setAllowedHeaders(List.of("*"));
+            config.setExposedHeaders(List.of("Authorization"));
             config.setMaxAge(3600L);
             return config;
         })
@@ -63,6 +66,8 @@ public class FoxBankSecurityConfig {
         .addFilterBefore(new RequestValidationFilter(), BasicAuthenticationFilter.class)
         .addFilterAt(new AuthoritiesLoggingAtFilter(), BasicAuthenticationFilter.class)
         .addFilterAfter(new AuthoritiesLoggingAfterFilter(), BasicAuthenticationFilter.class)
+        .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
+        .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
         .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
         .authorizeHttpRequests()
           .requestMatchers("/myAccount").hasRole("MANAGER")

@@ -10,8 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 and model is in the same package or a subpackage in this package. */
 // @EnableJpaRepositories("com.burch.foxbank.repository")
 // @EntityScan("com.burch.foxbank.model")
+// @EnableWebSecurity(debug = true)
 @SpringBootApplication
-@EnableWebSecurity(debug = true)
 public class FoxbankApplication {
 
   public static void main(String[] args) {
