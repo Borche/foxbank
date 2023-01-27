@@ -4,14 +4,16 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 /* These annotations are not needed because the repository
 and model is in the same package or a subpackage in this package. */
 // @EnableJpaRepositories("com.burch.foxbank.repository")
 // @EntityScan("com.burch.foxbank.model")
-// @EnableWebSecurity(debug = true)
+@EnableWebSecurity(debug = true)
 @SpringBootApplication
+@EnableMethodSecurity(prePostEnabled = true,  securedEnabled = true,  jsr250Enabled = true)
 public class FoxbankApplication {
 
   public static void main(String[] args) {
